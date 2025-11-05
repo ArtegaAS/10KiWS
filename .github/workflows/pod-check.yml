@@ -12,7 +12,7 @@ jobs:
       - name: Check pod status
         id: pods
         env:
-          KUBECONFIG: /home/runner/.kube/config-k8s   # путь к kubeconfig
+          KUBECONFIG: /home/student/.kube/config-k8s   # путь к kubeconfig
         run: |
           kubectl --context=k8s get pods -A --no-headers \
             | grep -E 'CrashLoopBackOff|Error|Failed' \
