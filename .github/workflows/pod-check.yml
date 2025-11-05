@@ -2,17 +2,17 @@ name: Pod Status Check
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # каждые 10 минут
+    - cron: "*/10 * * * *"   # every 10 min
   workflow_dispatch:
 
 jobs:
   check-pods:
-    runs-on: self-hosted   # выполняется на локальном раннере
+    runs-on: self-hosted   # self hosted runner
     steps:
       - name: Check pod status
         id: pods
         env:
-          KUBECONFIG: /home/student/.kube/config-k8s   # путь к kubeconfig
+          KUBECONFIG: /home/student/.kube/config-k8s   # kubeconfig path
         run: |
           kubectl --context=k8s get pods -A --no-headers \
             | grep -E 'CrashLoopBackOff|Error|Failed' \
@@ -31,7 +31,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           PODS=$(cat failed_pods.txt)
-          TEXT="В кластере k8s есть проблемные поды!\n$PODS"
+          TEXT="В кластере k8s есть проблемные поды! $PODS"
 
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
